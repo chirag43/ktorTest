@@ -18,4 +18,15 @@ class ApplicationTest {
             assertEquals("Hello World!", bodyAsText())
         }
     }
+
+    @Test
+    fun testHelp() = testApplication {
+        application {
+            configureRouting()
+        }
+        client.get("/help").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("Always there", bodyAsText())
+        }
+    }
 }

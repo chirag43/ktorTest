@@ -1,4 +1,4 @@
-val ktorVersion: String by extra("2.2.4")
+val ktorVersion: String by extra("2.3.0")
 val kotlinVersion: String by extra("1.9.22")
 val logbackVersion: String by extra("1.5.18")
 
@@ -28,6 +28,7 @@ dependencies {
     implementation("io.ktor:ktor-server-resources:$ktorVersion")
     implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
+    implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson-jvm:$ktorVersion")

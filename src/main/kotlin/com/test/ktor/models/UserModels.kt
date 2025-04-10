@@ -1,5 +1,6 @@
 package com.test.ktor.models
 
+import io.ktor.resources.*
 import java.time.Instant
 
 enum class UserRole {
@@ -15,3 +16,13 @@ data class User(
     val role: UserRole = UserRole.USER,
     val lastLoginTime: Instant? = null,
 )
+
+@Resource("/users")
+class Users {
+    @Resource("/{id}")
+    class ById(val parent: Users = Users(), val id: Long)
+
+    @Resource("/add")
+    class Add(val parent: Users = Users(), val name: String)
+
+}
