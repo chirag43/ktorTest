@@ -1,0 +1,15 @@
+###
+POST {{host}}/users/add
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "day2",
+  "password": "YG"
+}
+
+###
+GET {{host}}/users/1
+
+###
+GET {{host}}/users

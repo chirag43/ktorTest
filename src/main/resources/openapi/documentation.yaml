@@ -4,47 +4,106 @@ info:
   description: "ktorTest API"
   version: "1.0.0"
 servers:
-- url: "http://localhost:8080"
+  - url: "http://localhost:8080"
 paths:
   /:
     get:
-      description: ""
+      description: "Get HTML page with user management links"
       responses:
         "200":
           description: "OK"
+          content:
+            text/html:
+              schema:
+                type: "string"
+  /users/{id}:
+    get:
+      description: "Get user by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "User found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      description: "Delete user by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "202":
+          description: "User deleted"
           content:
             text/plain:
               schema:
                 type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-  /articles:
-    get:
-      description: ""
-      parameters:
-      - name: "sort"
-        in: "query"
-        required: false
-        schema:
+        "404":
+          description: "User not found"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /users/add:
+    post:
+      description: "Create new user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUserRequest"
+      responses:
+        "201":
+          description: "User created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+components:
+  schemas:
+    UserResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
           type: "string"
-      responses:
-        "200":
-          description: "OK <br> Get all articles ..."
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: ""
-  /json/jackson:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "string"
+    NewUserRequest:
+      type: "object"
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: "string"
+        password:
+          type: "string"
+    ErrorResponse:
+      type: "object"
+      properties:
+        error:
+          type: "string"
+        message:
+          type: "string"

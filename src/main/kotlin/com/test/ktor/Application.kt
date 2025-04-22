@@ -1,13 +1,23 @@
 package com.test.ktor
 
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import com.test.ktor.plugins.*
+import com.test.ktor.dao.DatabaseFactory
+import com.test.ktor.plugins.configureHTTP
+import com.test.ktor.plugins.configureMonitoring
+import com.test.ktor.plugins.configureRouting
+import com.test.ktor.plugins.configureSecurity
+import com.test.ktor.plugins.configureSerialization
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationStopped
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
-            .start(wait = true)
+        .start(wait = true)
+        .monitor.subscribe(ApplicationStopped) {
+            DatabaseFactory.close()
+        }
+
 }
 
 fun Application.module() {
@@ -16,4 +26,6 @@ fun Application.module() {
     configureMonitoring()
     configureSerialization()
     configureRouting()
+
+    DatabaseFactory.init()
 }
