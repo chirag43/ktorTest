@@ -1,6 +1,9 @@
-val ktorVersion: String by extra("2.3.0")
+val ktorVersion: String by extra("2.3.13")
 val kotlinVersion: String by extra("1.9.22")
 val logbackVersion: String by extra("1.5.18")
+val exposedVersion: String by extra("0.48.0")
+val mariaDBVersion: String by extra("3.5.3")
+val hickariCPVersion: String by extra("6.3.0")
 
 plugins {
     kotlin("jvm") version "1.9.22"
@@ -26,6 +29,7 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-resources:$ktorVersion")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
     implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
@@ -38,9 +42,18 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation(kotlin("stdlib-jdk8"))
 
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.mariadb.jdbc:mariadb-java-client:$mariaDBVersion")
+    implementation("com.zaxxer:HikariCP:$hickariCPVersion")
+
+    implementation("io.ktor:ktor-server-openapi:$ktorVersion")
+
+    testImplementation("io.ktor:ktor-server-tests-jvm:${ktorVersion}")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}")
 }
+
 kotlin {
     jvmToolchain(17)
 }

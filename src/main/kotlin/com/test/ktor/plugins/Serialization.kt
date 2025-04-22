@@ -1,21 +1,22 @@
 package com.test.ktor.plugins
 
-import io.ktor.serialization.jackson.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.server.response.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.application.*
-import io.ktor.server.routing.*
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import kotlinx.serialization.json.Json
 
 fun Application.configureSerialization() {
     install(ContentNegotiation) {
-        jackson {
-            enable(SerializationFeature.INDENT_OUTPUT)
-        }
+        json(Json {
+            prettyPrint = true
+            isLenient = true
+        })
     }
-    routing {
-        get("/json/jackson") {
-            call.respond(mapOf("hello" to "world"))
-        }
-    }
+
+//    routing {
+//        get("/hello") {
+//            call.respond(mapOf("hello" to "world"))
+//        }
+//    }
 }

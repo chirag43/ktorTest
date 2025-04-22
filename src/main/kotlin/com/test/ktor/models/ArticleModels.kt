@@ -1,6 +1,6 @@
 package com.test.ktor.models
 
-import io.ktor.resources.*
+import io.ktor.resources.Resource
 import kotlinx.serialization.Serializable
 
 @Serializable
