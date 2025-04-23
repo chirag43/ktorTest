@@ -1,33 +1,22 @@
 package com.test.ktor.plugins
 
 import com.test.ktor.dao.UsersTable
-import com.test.ktor.models.Articles
 import com.test.ktor.models.ErrorResponse
 import com.test.ktor.models.NewUserRequest
 import com.test.ktor.models.UserResponse
 import com.test.ktor.models.Users
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.URLBuilder
-import io.ktor.http.URLProtocol
-import io.ktor.http.parametersOf
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
-import io.ktor.server.html.respondHtml
 import io.ktor.server.request.receive
 import io.ktor.server.resources.Resources
 import io.ktor.server.resources.delete
 import io.ktor.server.resources.get
-import io.ktor.server.resources.href
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
-import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import io.ktor.util.logging.KtorSimpleLogger
-import kotlinx.html.a
-import kotlinx.html.body
-import kotlinx.html.i
-import kotlinx.html.p
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -134,33 +123,33 @@ fun Application.configureRouting() {
 //        }
 
         // Building links from resources
-        get {
-            call.respondHtml {
-                body {
-                    this@configureRouting.apply {
-                        p {
-                            val link: String = href("/users")
-                            a(link) { +"Get all users" }
-                        }
-                        p {
-                            val link: String = href("/users/1")
-                            a(link) { +"Get first user" }
-                        }
-                        p {
-                            val link: String = href("/users/add")
-                            a(link) { +"Add a new user" }
-                        }
-                        p {
-                            val urlBuilder =
-                                URLBuilder(URLProtocol.HTTPS, "ktor.io", parameters = parametersOf("token", "123"))
-                            href(Articles(sort = null), urlBuilder)
-                            val link: String = urlBuilder.buildString()
-                            i { a(link) { +link } }
-                        }
-                    }
-                }
-            }
-        }
+//        get {
+//            call.respondHtml {
+//                body {
+//                    this@configureRouting.apply {
+//                        p {
+//                            val link: String = href("/users")
+//                            a(link) { +"Get all users" }
+//                        }
+//                        p {
+//                            val link: String = href("/users/1")
+//                            a(link) { +"Get first user" }
+//                        }
+//                        p {
+//                            val link: String = href("/users/add")
+//                            a(link) { +"Add a new user" }
+//                        }
+//                        p {
+//                            val urlBuilder =
+//                                URLBuilder(URLProtocol.HTTPS, "ktor.io", parameters = parametersOf("token", "123"))
+//                            href(Articles(sort = null), urlBuilder)
+//                            val link: String = urlBuilder.buildString()
+//                            i { a(link) { +link } }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

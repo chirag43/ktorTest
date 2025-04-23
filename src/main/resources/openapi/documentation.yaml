@@ -6,6 +6,31 @@ info:
 servers:
   - url: "http://localhost:8080"
 paths:
+  /users:
+    get:
+      description: "Get paginated list of users"
+      parameters:
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            default: 10
+      responses:
+        "200":
+          description: "List of users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserResponse"
   /:
     get:
       description: "Get HTML page with user management links"
@@ -56,9 +81,9 @@ paths:
         "404":
           description: "User not found"
           content:
-            text/plain:
+            application/json:
               schema:
-                type: "string"
+                $ref: "#/components/schemas/ErrorResponse"
   /users/add:
     post:
       description: "Create new user"
