@@ -1,7 +1,10 @@
 package com.test.ktor.dao
 
+import com.test.ktor.helper.EncryptionHelper.decrypt
+import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import io.ktor.server.config.HoconApplicationConfig
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -10,18 +13,28 @@ import java.sql.DriverManager
 object DatabaseFactory {
 
     private lateinit var hikariDataSource: HikariDataSource
-    private const val dbName = "ktorTest"
-    private const val dbPort = "3306"
-    private const val dbHost = "localhost"
-    private const val dbUser = "test"
-    private const val dbPassword = "password"
 
-    private const val fullDbUrl = "jdbc:mariadb://$dbHost:$dbPort/$dbName"
-    private const val adminDbUrl = "jdbc:mariadb://$dbHost:$dbPort/mysql"
+    private val appConfig = HoconApplicationConfig(ConfigFactory.load())
 
-
+    private lateinit var fullDbUrl: String
+    private lateinit var adminDbUrl : String
+    private lateinit var dbName: String
+    private lateinit var dbUser: String
+    private lateinit var dbPassword: String
 
     fun init() {
+        val dbPort = appConfig.property("db.port").getString()
+        val dbHost = appConfig.property("db.host").getString()
+        dbName = appConfig.property("db.name").getString()
+        dbUser = appConfig.property("db.user").getString()
+        val encryptedPassword = appConfig.property("db.password").getString()
+        val encryptionKey = appConfig.property("db.encryptionKey").getString()
+
+        dbPassword = decrypt(encryptedPassword, encryptionKey)
+
+        fullDbUrl = "jdbc:mariadb://$dbHost:$dbPort/$dbName"
+        adminDbUrl = "jdbc:mariadb://$dbHost:$dbPort/mysql"
+
         createDatabaseIfNotExists()
 
         hikariDataSource = HikariDataSource(HikariConfig().apply {

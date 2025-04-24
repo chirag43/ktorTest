@@ -1,7 +1,7 @@
-val ktorVersion: String by extra("2.3.13")
-val kotlinVersion: String by extra("1.9.22")
+val ktorVersion: String by extra("3.1.2")
+val kotlinVersion: String by extra("2.1.20")
 val logbackVersion: String by extra("1.5.18")
-val exposedVersion: String by extra("0.48.0")
+val exposedVersion: String by extra("0.61.0")
 val mariaDBVersion: String by extra("3.5.3")
 val hickariCPVersion: String by extra("6.3.0")
 
@@ -50,7 +50,8 @@ dependencies {
 
     implementation("io.ktor:ktor-server-openapi:$ktorVersion")
 
-    testImplementation("io.ktor:ktor-server-tests-jvm:${ktorVersion}")
+    testImplementation("io.ktor:ktor-server-test-host:${ktorVersion}")
+//    testImplementation("io.ktor:ktor-server-tests-jvm:${ktorVersion}")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}")
 }
 
