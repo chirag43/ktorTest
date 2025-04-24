@@ -35,7 +35,8 @@ fun Application.configureRouting() {
             val size = 10
             val users: List<UserResponse> = transaction {
                 UsersTable.selectAll()
-                    .limit(size, offset =  (page-1)*size.toLong() )
+                    .limit(size)
+                    .offset(start = (page-1)*size.toLong())
                     .map {
                         UserResponse(
                             id = it[UsersTable.id],
