@@ -6,7 +6,7 @@ val mariaDBVersion: String by extra("3.5.3")
 val hickariCPVersion: String by extra("6.3.0")
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.1.20"
 
     id("io.ktor.plugin") version "3.1.2"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
