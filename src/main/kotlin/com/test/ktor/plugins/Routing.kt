@@ -1,6 +1,7 @@
 package com.test.ktor.plugins
 
 import com.test.ktor.dao.UsersTable
+import com.test.ktor.layouts.layout
 import com.test.ktor.models.ErrorResponse
 import com.test.ktor.models.NewUserRequest
 import com.test.ktor.models.UserResponse
@@ -8,15 +9,29 @@ import com.test.ktor.models.Users
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
+import io.ktor.server.html.respondHtml
 import io.ktor.server.request.receive
 import io.ktor.server.resources.Resources
 import io.ktor.server.resources.delete
 import io.ktor.server.resources.get
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import io.ktor.util.logging.KtorSimpleLogger
+import kotlinx.html.a
+import kotlinx.html.h2
+import kotlinx.html.li
+import kotlinx.html.nav
+import kotlinx.html.p
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.th
+import kotlinx.html.thead
+import kotlinx.html.tr
+import kotlinx.html.ul
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -30,9 +45,22 @@ fun Application.configureRouting() {
     install(Resources)
     routing {
 
+        get("/") {
+            call.respondHtml {
+                layout("Home") {
+                    h2 { +"Welcome to Ktor Test App" }
+                    p { +"Use the navigation bar to browse users." }
+                }
+            }
+        }
+
         get<Users> {
-            val page = 1
-            val size = 10
+            val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
+            val size = call.request.queryParameters["pageSize"]?.toIntOrNull() ?: 5
+            val totalUsers = transaction {
+                UsersTable.selectAll().count()
+            }
+            val totalPages = (totalUsers / size).toInt() + 1
             val users: List<UserResponse> = transaction {
                 UsersTable.selectAll()
                     .limit(size)
@@ -44,7 +72,46 @@ fun Application.configureRouting() {
                         )
                     }
             }
-            call.respond(users)
+//            call.respond(users)
+            call.respondHtml {
+                layout("User List") {
+                    h2 { +"User List - Page $page" }
+                    table("table table-striped") {
+                        thead {
+                            tr {
+                                th { +"Index" }
+                                th { +"ID" }
+                                th { +"Name" }
+                                th { +"Email" }
+                            }
+                        }
+                        tbody {
+                            users.forEachIndexed { index,user ->
+                                val email = user.name + "@test.com"
+                                tr {
+                                    td { +index.toString() }
+                                    td { +user.id.toString() }
+                                    td { +user.name }
+                                    td { +email }
+                                }
+                            }
+                        }
+                    }
+
+                    // Pagination Controls
+                    nav {
+                        ul("pagination") {
+                            for (p in 1..totalPages) {
+                                li("page-item" + if (p == page) " active" else "") {
+                                    a(href = "/users?page=$p&pageSize=$size", classes = "page-link") {
+                                        +p.toString()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         get<Users.ById> { userById ->
