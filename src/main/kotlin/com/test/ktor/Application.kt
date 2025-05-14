@@ -6,8 +6,10 @@ import com.test.ktor.plugins.configureMonitoring
 import com.test.ktor.plugins.configureRouting
 import com.test.ktor.plugins.configureSecurity
 import com.test.ktor.plugins.configureSerialization
+import com.typesafe.config.ConfigFactory
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStopped
+import io.ktor.server.config.HoconApplicationConfig
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
@@ -27,5 +29,6 @@ fun Application.module() {
     configureSerialization()
     configureRouting()
 
-    DatabaseFactory.init()
+    val appConfig = HoconApplicationConfig(ConfigFactory.load())
+    DatabaseFactory.init(appConfig)
 }

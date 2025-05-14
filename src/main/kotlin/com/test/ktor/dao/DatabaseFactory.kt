@@ -14,15 +14,13 @@ object DatabaseFactory {
 
     private lateinit var hikariDataSource: HikariDataSource
 
-    private val appConfig = HoconApplicationConfig(ConfigFactory.load())
-
     private lateinit var fullDbUrl: String
     private lateinit var adminDbUrl : String
     private lateinit var dbName: String
     private lateinit var dbUser: String
     private lateinit var dbPassword: String
 
-    fun init() {
+    fun init(appConfig: HoconApplicationConfig = HoconApplicationConfig(ConfigFactory.load())) {
         val dbPort = appConfig.property("db.port").getString()
         val dbHost = appConfig.property("db.host").getString()
         dbName = appConfig.property("db.name").getString()
