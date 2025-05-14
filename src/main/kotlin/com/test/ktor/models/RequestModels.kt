@@ -14,6 +14,6 @@ data class NewUserRequest(
 
 @kotlinx.serialization.Serializable
 data class UserResponse(
-    val id: Int,
+    val id: String,
     val name: String
 )

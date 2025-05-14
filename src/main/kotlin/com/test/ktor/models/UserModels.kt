@@ -13,7 +13,7 @@ enum class UserRole {
 @Resource("/users")
 class Users {
     @Resource("/{id}")
-    data class ById(val parent: Users = Users(), val id: Int)
+    data class ById(val parent: Users = Users(), val id: String)
 
 //    @Resource("/add")
 //    class Add(val parent: Users = Users(), val name: String, val password: String)
