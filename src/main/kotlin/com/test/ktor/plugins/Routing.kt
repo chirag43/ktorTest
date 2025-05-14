@@ -38,6 +38,7 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 
 internal val LOG = KtorSimpleLogger("Routing")
 
@@ -67,7 +68,7 @@ fun Application.configureRouting() {
                     .offset(start = (page-1)*size.toLong())
                     .map {
                         UserResponse(
-                            id = it[UsersTable.id],
+                            id = it[UsersTable.id].toString(),
                             name = it[UsersTable.userName] ?: "unknown"
                         )
                     }
@@ -115,13 +116,13 @@ fun Application.configureRouting() {
         }
 
         get<Users.ById> { userById ->
-            val userId: Int = userById.id
+            val userId: UUID = UUID.fromString(userById.id)
             val user: ResultRow? = transaction {
                 UsersTable.selectAll().where { UsersTable.id eq userId }.singleOrNull()
             }
             user?.let {
                 val userResponse = UserResponse(
-                    id = it[UsersTable.id],
+                    id = it[UsersTable.id].toString(),
                     name = it[UsersTable.userName] ?: "unknown"
                 )
                 call.respond(userResponse)
@@ -150,7 +151,7 @@ fun Application.configureRouting() {
         }
 
         delete<Users.ById> { userById ->
-            val userId: Int = userById.id
+            val userId: UUID = UUID.fromString(userById.id)
             val deletedCount = transaction {
                 UsersTable.deleteWhere { UsersTable.id eq userId }
             }
